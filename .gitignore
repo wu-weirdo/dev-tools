@@ -1,0 +1,6 @@
+# Project exclude paths
+/file-correlation/target/
+/just-auth/target/
+/location-info/target/
+/oshi/target/
+/preview/target/

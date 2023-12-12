@@ -1,0 +1,14 @@
+# 应用名称
+spring:
+  application:
+    name: web-socket
+
+# 应用服务 WEB 访问端口
+server:
+  port: 8000
+
+#密码，因为接口不需要权限，所以加了个密码做校验
+mySocket:
+  myPwd: whf_123
+
+
