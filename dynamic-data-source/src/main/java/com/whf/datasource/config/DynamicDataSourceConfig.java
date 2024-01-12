@@ -2,7 +2,6 @@ package com.whf.datasource.config;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -16,40 +15,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@MapperScan(basePackages = "com.mzd.multipledatasources.mapper", sqlSessionFactoryRef = "SqlSessionFactory") //basePackages 我们接口文件的地址
 public class DynamicDataSourceConfig {
 
     // 将这个对象放入Spring容器中
-    @Bean(name = "PrimaryDataSource")
+    @Bean
     // 表示这个数据源是默认数据源
     @Primary
     // 读取application.properties中的配置参数映射成为一个对象
     // prefix表示参数的前缀
-    @ConfigurationProperties(prefix = "spring.datasource.primary")
-    public DataSource getDateSource1() {
+    @ConfigurationProperties(prefix = "spring.datasource.master")
+    public DataSource masterDataSource() {
         return DataSourceBuilder.create().build();
     }
 
 
-    @Bean(name = "SecondaryDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.secondary")
-    public DataSource getDateSource2() {
+    @Bean
+    @ConfigurationProperties(prefix = "spring.datasource.salve")
+    public DataSource salveDataSource() {
         return DataSourceBuilder.create().build();
     }
 
 
     @Bean(name = "dynamicDataSource")
-    public DynamicDataSource DataSource(@Qualifier("PrimaryDataSource") DataSource primaryDataSource,
-                                        @Qualifier("SecondaryDataSource") DataSource secondaryDataSource) {
+    public DynamicDataSource dynamicDataSource() {
 
         //这个地方是比较核心的targetDataSource 集合是我们数据库和名字之间的映射
         Map<Object, Object> targetDataSource = new HashMap<>();
-        targetDataSource.put(DataSourceType.DataBaseType.Primary, primaryDataSource);
-        targetDataSource.put(DataSourceType.DataBaseType.Secondary, secondaryDataSource);
-        DynamicDataSource dataSource = new DynamicDataSource();
-        dataSource.setTargetDataSources(targetDataSource);
-        dataSource.setDefaultTargetDataSource(primaryDataSource);//设置默认对象
-        return dataSource;
+        DataSource defaultDataSource = masterDataSource();
+        targetDataSource.put(DataSourceType.master, defaultDataSource);
+        targetDataSource.put(DataSourceType.salve, salveDataSource());
+        return new DynamicDataSource(defaultDataSource, targetDataSource);
     }
 
 

@@ -1,34 +1,35 @@
 package com.whf.datasource.config;
 
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
+import com.whf.datasource.utils.DataSourceContextHolder;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Method;
+import java.util.Objects;
 
 @Aspect
 @Component
 public class DynamicDataSourceAspect {
 
-    @Before("@annotation(dataSource)")//拦截我们的注解
-    public void changeDataSource(JoinPoint point, DataSource dataSource) throws Throwable {
-        String value = dataSource.value();
-        if (value.equals("primary")){
-            DataSourceType.setDataBaseType(DataSourceType.DataBaseType.Primary);
-        }else if (value.equals("secondary")){
-            DataSourceType.setDataBaseType(DataSourceType.DataBaseType.Secondary);
-        }else {
-            DataSourceType.setDataBaseType(DataSourceType.DataBaseType.Primary);//默认使用主数据库
+    @Pointcut("@annotation(com.whf.datasource.config.DataSource)")
+    public void dynamicDataSource(){}
+
+    @Around("dynamicDataSource()")
+    public Object datasourceAround(ProceedingJoinPoint point) throws Throwable {
+        MethodSignature signature = (MethodSignature)point.getSignature();
+        Method method = signature.getMethod();
+        DataSource ds = method.getAnnotation(DataSource.class);
+        if (Objects.nonNull(ds)){
+            DataSourceContextHolder.setDataSource(ds.value().name());
         }
-
-    }
-
-    @After("@annotation(dataSource)") //清除数据源的配置
-    public void restoreDataSource(JoinPoint point, DataSource dataSource) {
-        DataSourceType.clearDataBaseType();
-
-
+        try {
+            return point.proceed();
+        } finally {
+            DataSourceContextHolder.removeDataSource();
+        }
     }
 }

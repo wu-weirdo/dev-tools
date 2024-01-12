@@ -9,5 +9,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface DataSource {
-    String value() default "primary"; //该值即key值，默认使用默认数据库
+    DataSourceType value() default DataSourceType.master; //该值即key值，默认使用默认数据库
 }
