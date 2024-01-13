@@ -19,6 +19,7 @@
         <module>design-patterns</module>
         <module>location-info</module>
         <module>oshi</module>
+        <module>redis-lock-starter</module>
     </modules>
 
     <properties>

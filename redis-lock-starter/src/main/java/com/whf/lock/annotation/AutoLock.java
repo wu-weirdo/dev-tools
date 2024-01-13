@@ -14,7 +14,7 @@ public @interface AutoLock {
     /**
      * 锁前缀
      */
-    String prefix() default "anoxia:lock";
+    String prefix() default "autoLock";
 
     /**
      * 加锁时间
