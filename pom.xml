@@ -20,6 +20,7 @@
         <module>location-info</module>
         <module>oshi</module>
         <module>redis-lock-starter</module>
+        <module>statemachine</module>
     </modules>
 
     <properties>

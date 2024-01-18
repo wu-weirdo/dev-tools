@@ -10,7 +10,7 @@
     <artifactId>oshi</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>oshi</name>
-    <description>oshi</description>
+    <description>服务器监控</description>
 
     <dependencies>
         <!--常用工具类 -->

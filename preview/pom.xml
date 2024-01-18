@@ -11,7 +11,7 @@
     <artifactId>preview</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>preview</name>
-    <description>preview</description>
+    <description>文件预览</description>
 
     <dependencies>
         <!-- 预览 -->

@@ -10,7 +10,7 @@
     <artifactId>dynamic-data-source</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>dynamic-data-source</name>
-    <description>dynamic-data-source</description>
+    <description>动态数据源</description>
 
     <dependencies>
         <dependency>

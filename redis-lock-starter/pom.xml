@@ -9,7 +9,7 @@
     </parent>
     <artifactId>redis-lock-starter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>redis-lock-starter</name>
+    <name>注解式分布式锁</name>
     <dependencies>
         <!--使用redisson作为分布式锁-->
         <dependency>

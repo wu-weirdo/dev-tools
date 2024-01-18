@@ -10,7 +10,7 @@
     <artifactId>design-patterns</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>design-patterns</name>
-    <description>design-patterns</description>
+    <description>设计模式</description>
 
     <dependencies>
         <dependency>

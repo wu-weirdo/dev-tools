@@ -10,7 +10,7 @@
     <artifactId>file-correlation</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>file-correlation</name>
-    <description>Demo project for Spring Boot</description>
+    <description>文件上传下载</description>
 
     <dependencies>
         <dependency>

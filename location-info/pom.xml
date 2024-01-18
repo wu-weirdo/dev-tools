@@ -11,7 +11,7 @@
     <artifactId>location-info</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>location-info</name>
-    <description>location-info</description>
+    <description>ip转换为地址</description>
 
     <dependencies>
         <dependency>
