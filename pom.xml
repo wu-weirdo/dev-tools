@@ -21,6 +21,7 @@
         <module>oshi</module>
         <module>redis-lock-starter</module>
         <module>statemachine</module>
+        <module>file-upload</module>
     </modules>
 
     <properties>

@@ -2,10 +2,7 @@ package com.whf.statemachine.controller;
 
 import com.whf.statemachine.entity.Order;
 import com.whf.statemachine.service.OrderService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -23,6 +20,17 @@ public class OrderController {
      */
     @RequestMapping("/getById")
     public Order getById(@RequestParam("id") Long id) {
+        //根据id查询订单
+        return orderService.getById(id);
+    }
+
+    /**
+     * 根据id查询订单
+     *
+     * @return
+     */
+    @PostMapping("/getByIdPost")
+    public Order getByIdPost(@RequestBody Long id) {
         //根据id查询订单
         return orderService.getById(id);
     }
