@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+
+    listener:
+      simple:
+        acknowledge-mode: manual # 手动确认
+
+    publisher-confirm-type: correlated # 发布确认
+    publisher-returns: true # 发送失败返回
+
+
+
+rocketmq:
+  name-server: localhost:9876
+  # 生产者配置
+  producer:
+    # 发送同一类消息的设置为同一个group，保证唯一
+    group: rocketmq-producer-group
+    # 发送消息超时时间,默认3000
+    sendMessageTimeout: 3000
+    # 发送消息失败重试次数，默认2
+    retryTimesWhenSendFailed: 2
+    # 异步消息重试此处，默认2
+    retryTimesWhenSendAsyncFailed: 2
+    # 消息最大长度 默认1024*4(4M)
+    maxMessageSize: 4096
+    # 是否在内部发送失败时重试另一个broker，默认false
+    retryNextServer: false
+    # 压缩消息阈值，默认4k(1024 * 4)
+    compressMessageBodyThreshold: 4096
+  consumer:
+    group: rocketmq-consumer-group
