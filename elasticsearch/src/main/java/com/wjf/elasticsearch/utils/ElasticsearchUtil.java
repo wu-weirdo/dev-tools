@@ -13,6 +13,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchScrollRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
@@ -24,11 +25,14 @@ import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -36,7 +40,6 @@ import java.util.*;
 
 /**
  * elasticSearch api方法
- *
  */
 @Slf4j
 @Component
@@ -347,7 +350,7 @@ public class ElasticsearchUtil {
      * @param clazz         转换目标Class对象
      */
     public <T> EsPage<T> selectDocumentPage(String index, SearchSourceBuilder sourceBuilder, int startPage,
-    int pageSize, Class<T> clazz) {
+                                            int pageSize, Class<T> clazz) {
         try {
             SearchRequest request = new SearchRequest(index);
             if (sourceBuilder != null) {
@@ -402,36 +405,36 @@ public class ElasticsearchUtil {
         return sourceAsMap;
     }
 
-//    /**
-//     * 高亮结果集 特殊处理
-//     *
-//     * @param searchResponse
-//     * @param highlightField
-//     */
-//    private List<Map<String, Object>> setSearchResponse(SearchResponse searchResponse, String highlightField) {
-//        List<Map<String, Object>> sourceList = new ArrayList<>();
-//        StringBuffer stringBuffer = new StringBuffer();
-//
-//        for (SearchHit searchHit : searchResponse.getHits().getHits()) {
-//            searchHit.getSourceAsMap().put("id", searchHit.getId());
-//
-//            if (StringUtils.isNotEmpty(highlightField)) {
-//
-//                System.out.println("遍历 高亮结果集，覆盖 正常结果集" + searchHit.getSourceAsMap());
-//                Text[] text = searchHit.getHighlightFields().get(highlightField).getFragments();
-//
-//                if (text != null) {
-//                    for (Text str : text) {
-//                        stringBuffer.append(str.string());
-//                    }
-//                    //遍历 高亮结果集，覆盖 正常结果集
-//                    searchHit.getSourceAsMap().put(highlightField, stringBuffer.toString());
-//                }
-//            }
-//            sourceList.add(searchHit.getSourceAsMap());
-//        }
-//        return sourceList;
-//    }
+    /**
+     * 高亮结果集 特殊处理
+     *
+     * @param searchResponse
+     * @param highlightField
+     */
+    private List<Map<String, Object>> setSearchResponse(SearchResponse searchResponse, String highlightField) {
+        List<Map<String, Object>> sourceList = new ArrayList<>();
+        StringBuffer stringBuffer = new StringBuffer();
+
+        for (SearchHit searchHit : searchResponse.getHits().getHits()) {
+            searchHit.getSourceAsMap().put("id", searchHit.getId());
+
+            if (StringUtils.hasText(highlightField)) {
+
+                System.out.println("遍历 高亮结果集，覆盖 正常结果集" + searchHit.getSourceAsMap());
+                Text[] text = searchHit.getHighlightFields().get(highlightField).getFragments();
+
+                if (text != null) {
+                    for (Text str : text) {
+                        stringBuffer.append(str.string());
+                    }
+                    //遍历 高亮结果集，覆盖 正常结果集
+                    searchHit.getSourceAsMap().put(highlightField, stringBuffer.toString());
+                }
+            }
+            sourceList.add(searchHit.getSourceAsMap());
+        }
+        return sourceList;
+    }
 
 
     /**
@@ -475,5 +478,92 @@ public class ElasticsearchUtil {
         }
     }
 
+    /**
+     * 深度分页-scroll
+     *
+     * @param index         索引
+     * @param sourceBuilder 查询条件
+     * @param clazz         返回类型
+     * @param scrollId      scrollId
+     */
+    public <T> EsScrollPage<T> getEsPageByScroll(String index, SearchSourceBuilder sourceBuilder, Class<T> clazz, String scrollId) throws IOException {
+        SearchResponse response;
+        if (StringUtils.hasText(scrollId)) {
+            // 第一次请求 设置查询条件 每页数量 scroll的过期时间
+            SearchRequest request = new SearchRequest(index);
+            if (Objects.isNull(sourceBuilder)) {
+                sourceBuilder = new SearchSourceBuilder();
+                sourceBuilder.query(QueryBuilders.matchAllQuery());
+                sourceBuilder.size(10);
+            }
+            request.source(sourceBuilder);
+            request.scroll(TimeValue.timeValueMinutes(1L));
+            response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+        } else {
+            // 非第一次请求 设置滚动id scroll的过期时间
+            SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
+            scrollRequest.scroll(TimeValue.timeValueMinutes(1L));
+            response = restHighLevelClient.scroll(scrollRequest, RequestOptions.DEFAULT);
+        }
+        scrollId = response.getScrollId();
+        if (response.getHits() != null) {
+            long totalHits = Arrays.stream(response.getHits().getHits()).count();
+            List<T> list = new ArrayList<>();
+            SearchHit[] hits = response.getHits().getHits();
+            for (SearchHit documentFields : hits) {
+                Map<String, Object> sourceAsMap = documentFields.getSourceAsMap();
+                // 高亮结果集特殊处理 -- 高亮信息会显示在highlight标签下  需要将实体类中的字段进行替换
+                Map<String, Object> map = this.highlightBuilderHandle(sourceAsMap, documentFields);
+                list.add(dealObject(map, clazz));
+            }
+            return new EsScrollPage<>((int) totalHits, list, scrollId);
+        }
+        return new EsScrollPage<>(0, null, null);
+    }
+
+    /**
+     * 深度分页-search after
+     *
+     * @param index         索引
+     * @param sourceBuilder 查询条件
+     * @param clazz         返回类型
+     * @param afterId       afterId
+     */
+    public <T> EsAfterPage<T> getEsPageBySearchAfter(String index, SearchSourceBuilder sourceBuilder, Class<T> clazz, String afterId) throws IOException {
+        SearchRequest request = new SearchRequest(index);
+        SearchResponse response;
+        //如果查询条件为空 设置查询条件 每页数量 设置唯一字段排序
+        if (Objects.isNull(sourceBuilder)) {
+            sourceBuilder = new SearchSourceBuilder();
+            sourceBuilder.query(QueryBuilders.matchAllQuery());
+            sourceBuilder.size(10);
+            sourceBuilder.sort("id", SortOrder.DESC);
+        }
+        if (StringUtils.hasText(afterId)) {
+            // 非第一次请求 设置afterId
+            sourceBuilder.searchAfter(JSON.parseObject(afterId, Object[].class));
+        }
+        //执行查询
+        request.source(sourceBuilder);
+        response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+        //处理结果
+        if (response.getHits() != null) {
+            long totalHits = Arrays.stream(response.getHits().getHits()).count();
+            List<T> list = new ArrayList<>();
+            SearchHit[] hits = response.getHits().getHits();
+            for (SearchHit documentFields : hits) {
+                Map<String, Object> sourceAsMap = documentFields.getSourceAsMap();
+                // 高亮结果集特殊处理 -- 高亮信息会显示在highlight标签下  需要将实体类中的字段进行替换
+                Map<String, Object> map = this.highlightBuilderHandle(sourceAsMap, documentFields);
+                list.add(dealObject(map, clazz));
+            }
+            Object[] sortValues = hits[hits.length - 1].getSortValues();
+            if (sortValues != null) {
+                afterId = JSON.toJSONString(sortValues);
+            }
+            return new EsAfterPage<>((int) totalHits, list, afterId);
+        }
+        return new EsAfterPage<>(0, null, null);
+    }
 }
 
