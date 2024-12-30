@@ -157,9 +157,9 @@ public class RabbitMQConfig {
          * Map<String, Object> arguments 属性
          */
         /*HashMap<String, Object> arguments = new HashMap<>();
-        //死信交换机
-        arguments.put("x-dead-letter-exchange", DELAY_EXCHANGE_NAME);
-        //死信路由键
+        //死信交换机 消息过期后投递到的交换机
+        arguments.put("x-dead-letter-exchange", DIRECT_EXCHANGE_NAME);
+        //死信路由键 消息过期后投递到的路由键
         arguments.put("x-dead-letter-routing-key", DIRECT_ROUTING_KEY);
         //过期时间
         arguments.put("x-message-ttl", 60000); // 消息过期时间 1分钟
