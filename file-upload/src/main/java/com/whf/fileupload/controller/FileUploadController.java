@@ -2,11 +2,9 @@ package com.whf.fileupload.controller;
 
 import com.whf.fileupload.model.FileUploadDTO;
 import com.whf.fileupload.service.FileUploadService;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -45,5 +43,10 @@ public class FileUploadController {
     public ResponseEntity<Map<String, Object>> chunkUpload(@RequestBody FileUploadDTO dto) {
         Boolean result = fileUploadService.chunkUpload(dto);
         return ResponseEntity.ok().body(Collections.singletonMap("result", result));
+    }
+
+    @GetMapping("/download")
+    public ResponseEntity<FileSystemResource> download(@RequestParam("fileName") String fileName) {
+        return fileUploadService.download(fileName);
     }
 }

@@ -1,6 +1,8 @@
 package com.whf.fileupload.service;
 
 import com.whf.fileupload.model.FileUploadDTO;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,4 +36,11 @@ public interface FileUploadService {
      * @return
      */
     Boolean chunkUpload(FileUploadDTO dto);
+
+    /**
+     * 文件下载
+     * @param fileName
+     * @return
+     */
+    ResponseEntity<FileSystemResource> download(String fileName);
 }

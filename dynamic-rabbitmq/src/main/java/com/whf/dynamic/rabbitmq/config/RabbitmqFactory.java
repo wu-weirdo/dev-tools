@@ -60,7 +60,7 @@ public class RabbitmqFactory {
      */
     private static SimpleRabbitListenerContainerFactory getListenerContainerFactory(ConnectionFactory connectionFactory) {
         SimpleRabbitListenerContainerFactory containerFactory = listenerContainerFactoryMap.get(connectionFactory);
-        if (containerFactory != null) {
+        if (containerFactory == null) {
             containerFactory = new SimpleRabbitListenerContainerFactory();
             containerFactory.setConnectionFactory(connectionFactory);
             containerFactory.setDefaultRequeueRejected(false);

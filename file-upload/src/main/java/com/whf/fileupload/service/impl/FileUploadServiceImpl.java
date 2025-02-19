@@ -6,19 +6,33 @@ import com.whf.fileupload.exception.ServiceException;
 import com.whf.fileupload.model.FileUploadDTO;
 import com.whf.fileupload.service.FileUploadService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import sun.misc.Cleaner;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * 文件上传服务实现类
@@ -199,6 +213,76 @@ public class FileUploadServiceImpl implements FileUploadService {
             });
         } catch (Exception e) {
             log.error("unmap error:" + e);
+        }
+    }
+
+    /**
+     * 下载文件通过FileSystemResource
+     * @param fileName
+     * @return
+     */
+    @Override
+    public ResponseEntity<FileSystemResource> download(String fileName) {
+        //获取文件
+        String filePath = Constants.FILE_ROOT_PATH + File.separator + fileName;
+        File file = new File(filePath);
+        if (!file.exists()) {
+            // 设置响应头信息，包括文件名和文件类型
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            return ResponseEntity.ok().headers(headers).body(new FileSystemResource(file));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    /**
+     * 下载文件通过Resource
+     * @param fileName
+     * @return
+     */
+    public ResponseEntity<Resource> download2(String fileName) {
+        // 获取文件路径
+        Path path = Paths.get(Constants.FILE_ROOT_PATH).resolve(fileName).normalize();
+        try {
+            Resource resource = new UrlResource(path.toUri());
+            if (resource.exists() && resource.isReadable()) {
+                // 设置响应头信息，包括文件名和文件类型
+                HttpHeaders headers = new HttpHeaders();
+                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
+                headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+                return ResponseEntity.ok().headers(headers).body(resource);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    /**
+     * 下载文件通过HttpServletResponse
+     * @param fileName
+     * @param response
+     */
+    public void download3(String fileName, HttpServletResponse response) {
+        //获取文件
+        String filePath = Constants.FILE_ROOT_PATH + File.separator + fileName;
+        File file = new File(filePath);
+        if (!file.exists()) {
+            // 设置响应头信息，包括文件名和文件类型
+            response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
+            response.addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            // 读取文件内容并写入响应体
+            try (FileInputStream is = new FileInputStream(file);
+                 ServletOutputStream os = response.getOutputStream()) {
+                byte[] buffer = new byte[1024];
+                int len = 0;
+                while ((len = is.read(buffer)) > -1) {
+                    os.write(buffer, 0, len);
+                }
+            } catch (IOException e) {
+                log.error("download3 file error:{}", e.getMessage());
+            }
         }
     }
 }
