@@ -9,19 +9,22 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>elasticsearch</module>
-        <module>preview</module>
-        <module>file-correlation</module>
-        <module>web-socket</module>
         <module>convert-tree</module>
-        <module>just-auth</module>
-        <module>dynamic-data-source</module>
         <module>design-patterns</module>
-        <module>location-info</module>
-        <module>oshi</module>
-        <module>redis-lock-starter</module>
-        <module>statemachine</module>
+        <module>dynamic-data-source</module>
+        <module>dynamic-rabbitmq</module>
+        <module>elasticsearch</module>
+        <module>file-correlation</module>
         <module>file-upload</module>
+        <module>just-auth</module>
+        <module>location-info</module>
+        <module>message-queue</module>
+        <module>oshi</module>
+        <module>preview</module>
+        <module>redis-lock-starter</module>
+        <module>sharding-jdbc</module>
+        <module>statemachine</module>
+        <module>web-socket</module>
     </modules>
 
     <properties>
