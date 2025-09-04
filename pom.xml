@@ -16,6 +16,7 @@
         <module>elasticsearch</module>
         <module>file-correlation</module>
         <module>file-upload</module>
+        <module>image-thumbnailator</module>
         <module>just-auth</module>
         <module>location-info</module>
         <module>message-queue</module>
