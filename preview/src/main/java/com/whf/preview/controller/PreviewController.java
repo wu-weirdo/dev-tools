@@ -21,6 +21,6 @@ public class PreviewController {
     @GetMapping("/preview")
     public void onlinePreview(@RequestParam(value = "url", required = false) String url, HttpServletResponse response) {
         url = "D:\\test\\1653285241016.xlsx";
-        previewService.onlinePreview(url,response);
+        previewService.onlinePreview(url, response);
     }
 }

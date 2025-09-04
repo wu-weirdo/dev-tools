@@ -39,9 +39,9 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public void save(MultipartFile multipartFile) {
         try {
-            Files.copy(multipartFile.getInputStream(),this.path.resolve(multipartFile.getOriginalFilename()));
+            Files.copy(multipartFile.getInputStream(), this.path.resolve(multipartFile.getOriginalFilename()));
         } catch (IOException e) {
-            throw new RuntimeException("Could not store the file. Error:"+e.getMessage());
+            throw new RuntimeException("Could not store the file. Error:" + e.getMessage());
         }
     }
 
@@ -50,20 +50,20 @@ public class FileStorageServiceImpl implements FileStorageService {
         Path file = path.resolve(filename);
         try {
             Resource resource = new UrlResource(file.toUri());
-            if(resource.exists() || resource.isReadable()){
+            if (resource.exists() || resource.isReadable()) {
                 return resource;
-            }else{
+            } else {
                 throw new RuntimeException("Could not read the file.");
             }
         } catch (MalformedURLException e) {
-            throw new RuntimeException("Error:"+e.getMessage());
+            throw new RuntimeException("Error:" + e.getMessage());
         }
     }
 
     @Override
     public Stream<Path> load() {
         try {
-            return Files.walk(this.path,1)
+            return Files.walk(this.path, 1)
                     .filter(path -> !path.equals(this.path))
                     .map(this.path::relativize);
         } catch (IOException e) {

@@ -36,6 +36,7 @@ public class OrderStateListenerImpl {
         orderMapper.updateById(order);
         //TODO 其他业务
     }
+
     @OnTransition(source = "WAIT_DELIVER", target = "WAIT_RECEIVE")
     @StateResult(key = OrderConstants.deliverTransition)
     public void deliverTransition(Message<OrderStatusChangeEvent> message) {
@@ -46,6 +47,7 @@ public class OrderStateListenerImpl {
         orderMapper.updateById(order);
         //TODO 其他业务
     }
+
     @OnTransition(source = "WAIT_RECEIVE", target = "FINISH")
     @StateResult(key = OrderConstants.receiveTransition)
     public void receiveTransition(Message<OrderStatusChangeEvent> message) {

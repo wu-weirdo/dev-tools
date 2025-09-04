@@ -10,6 +10,7 @@ import java.util.Map;
 
 /**
  * 文件上传服务
+ *
  * @author whf
  * @date 2024/3/7
  */
@@ -18,6 +19,7 @@ public interface FileUploadService {
 
     /**
      * 文件上传
+     *
      * @param file
      * @return
      */
@@ -25,6 +27,7 @@ public interface FileUploadService {
 
     /**
      * 检查上传
+     *
      * @param dto
      * @return
      */
@@ -32,6 +35,7 @@ public interface FileUploadService {
 
     /**
      * 分片上传
+     *
      * @param dto
      * @return
      */
@@ -39,6 +43,7 @@ public interface FileUploadService {
 
     /**
      * 文件下载
+     *
      * @param fileName
      * @return
      */

@@ -16,10 +16,12 @@ public class ConvertTree<T> {
      * 是否缓存节点实例
      */
     private Boolean isCacheEntity;
+
     /**
      * 是否缓存追溯父节点id
      */
     private Boolean isCacheParent;
+
     /**
      * 是否缓存同级节点id
      */
@@ -43,7 +45,7 @@ public class ConvertTree<T> {
             TreeNode<T> tree = getTree(datas, idName, fidName);
             forest.add(tree);
         }
-        return new Tree<>(datas,forest,this);
+        return new Tree<>(datas, forest, this);
     }
 
     /**

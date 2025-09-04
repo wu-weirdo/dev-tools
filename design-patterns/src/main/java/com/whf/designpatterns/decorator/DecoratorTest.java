@@ -2,6 +2,7 @@ package com.whf.designpatterns.decorator;
 
 /**
  * 装饰器模式测试类
+ *
  * @author: 栈长
  * @from: 公众号Java技术栈
  */

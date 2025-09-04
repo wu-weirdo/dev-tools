@@ -57,7 +57,7 @@ public class CouponStrategyContext implements ApplicationContextAware {
         couponStrategyMap = new HashMap<>(strategyBeans.size());
         for (CouponStrategy strategy : strategyBeans.values()) {
             couponStrategyMap.put(strategy.applyCouponType().name(), strategy);
-            log.info("register strategy {}",strategy.applyCouponType());
+            log.info("register strategy {}", strategy.applyCouponType());
         }
     }
 }

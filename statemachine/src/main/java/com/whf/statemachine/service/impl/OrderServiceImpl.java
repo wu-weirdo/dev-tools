@@ -28,8 +28,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
         implements OrderService {
     @Resource
     private StateMachine<OrderStatus, OrderStatusChangeEvent> orderStateMachine;
+
     @Resource
     private StateMachinePersister<OrderStatus, OrderStatusChangeEvent, String> stateMachineMemPersister;
+
     @Resource
     private OrderMapper orderMapper;
 
@@ -114,18 +116,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
             stateMachineMemPersister.restore(orderStateMachine, String.valueOf(order.getId()));
             Message message = MessageBuilder.withPayload(changeEvent).setHeader("order", order).build();
             result = orderStateMachine.sendEvent(message);
-            if(!result){
+            if (!result) {
                 return false;
             }
             //获取到监听的结果信息
             Integer o = (Integer) orderStateMachine.getExtendedState().getVariables().get(key + order.getId());
             //操作完成之后,删除本次对应的key信息
-            orderStateMachine.getExtendedState().getVariables().remove(key+order.getId());
+            orderStateMachine.getExtendedState().getVariables().remove(key + order.getId());
             //如果事务执行成功，则持久化状态机
-            if(Objects.equals(1,Integer.valueOf(o))){
+            if (Objects.equals(1, Integer.valueOf(o))) {
                 //持久化状态机状态
                 stateMachineMemPersister.persist(orderStateMachine, String.valueOf(order.getId()));
-            }else {
+            } else {
                 //订单执行业务异常
                 return false;
             }

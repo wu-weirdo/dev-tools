@@ -218,6 +218,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     /**
      * 下载文件通过FileSystemResource
+     *
      * @param fileName
      * @return
      */
@@ -238,6 +239,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     /**
      * 下载文件通过Resource
+     *
      * @param fileName
      * @return
      */
@@ -261,6 +263,7 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     /**
      * 下载文件通过HttpServletResponse
+     *
      * @param fileName
      * @param response
      */

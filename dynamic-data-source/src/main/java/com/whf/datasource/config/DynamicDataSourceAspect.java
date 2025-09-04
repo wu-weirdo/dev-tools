@@ -20,16 +20,17 @@ public class DynamicDataSourceAspect {
     private DynamicDataSource dynamicDataSource;
 
     @Pointcut("@annotation(com.whf.datasource.config.DataSource)")
-    public void dynamicDataSource(){}
+    public void dynamicDataSource() {
+    }
 
     @Around("dynamicDataSource()")
     public Object datasourceAround(ProceedingJoinPoint point) throws Throwable {
-        MethodSignature signature = (MethodSignature)point.getSignature();
+        MethodSignature signature = (MethodSignature) point.getSignature();
         Method method = signature.getMethod();
         DataSource ds = method.getAnnotation(DataSource.class);
-        if (Objects.nonNull(ds)){
+        if (Objects.nonNull(ds)) {
             //判断数据源是否存在
-            if (!dynamicDataSource.existsDataSource(ds.value().name())){
+            if (!dynamicDataSource.existsDataSource(ds.value().name())) {
                 throw new RuntimeException("数据源[" + ds.value().name() + "]不存在");
             }
             //设置数据源

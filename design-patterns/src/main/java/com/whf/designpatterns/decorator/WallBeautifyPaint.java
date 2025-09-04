@@ -2,6 +2,7 @@ package com.whf.designpatterns.decorator;
 
 /**
  * 墙面装修装饰器角色实现（涂油漆）
+ *
  * @author: 栈长
  * @from: 公众号Java技术栈
  */

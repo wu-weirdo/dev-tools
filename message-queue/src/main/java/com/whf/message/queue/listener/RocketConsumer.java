@@ -12,6 +12,6 @@ import org.springframework.stereotype.Component;
 public class RocketConsumer implements RocketMQListener<User> {
     @Override
     public void onMessage(User message) {
-      log.info("receive message: {}", message);
+        log.info("receive message: {}", message);
     }
 }

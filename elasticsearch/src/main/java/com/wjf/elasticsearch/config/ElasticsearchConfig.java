@@ -45,6 +45,7 @@ public class ElasticsearchConfig {
 
     /**
      * 初始化客户端
+     *
      * @return
      */
     @Bean(name = "restHighLevelClient")
@@ -74,6 +75,7 @@ public class ElasticsearchConfig {
 
     /**
      * 根据配置创建HttpHost
+     *
      * @param s
      * @return
      */
@@ -90,9 +92,10 @@ public class ElasticsearchConfig {
 
     /**
      * 构建认证服务
+     *
      * @return
      */
-    private CredentialsProvider buildCredentialsProvider(){
+    private CredentialsProvider buildCredentialsProvider() {
         final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(userName,
                 userPwd));

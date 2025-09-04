@@ -23,6 +23,7 @@ public class UserNameLoginHandler extends LoginHandler<LoginRequest> {
 
     /**
      * 获取单例
+     *
      * @return
      */
     public static UserNameLoginHandler getInstance() {

@@ -30,9 +30,10 @@ public class RabbitCallback implements RabbitTemplate.ConfirmCallback, RabbitTem
 
     /**
      * 消息发送结果确认
+     *
      * @param correlationData correlation data for the callback.
-     * @param ack true for ack, false for nack
-     * @param cause An optional cause, for nack, when available, otherwise null.
+     * @param ack             true for ack, false for nack
+     * @param cause           An optional cause, for nack, when available, otherwise null.
      */
     @Override
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {
@@ -41,10 +42,11 @@ public class RabbitCallback implements RabbitTemplate.ConfirmCallback, RabbitTem
 
     /**
      * 消息发送失败返回
-     * @param message the returned message.
-     * @param replyCode the reply code.
-     * @param replyText the reply text.
-     * @param exchange the exchange.
+     *
+     * @param message    the returned message.
+     * @param replyCode  the reply code.
+     * @param replyText  the reply text.
+     * @param exchange   the exchange.
      * @param routingKey the routing key.
      */
     @Override

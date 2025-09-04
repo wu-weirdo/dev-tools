@@ -56,7 +56,7 @@ public class ConvertTree<T> {
             }
         }
 
-        return getForest(datas,idName,fidName);
+        return getForest(datas, idName, fidName);
     }
 
     /**

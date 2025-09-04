@@ -4,6 +4,7 @@ import lombok.Setter;
 
 /**
  * 责任链模式 登录处理抽象类
+ *
  * @param <T>
  */
 @Setter

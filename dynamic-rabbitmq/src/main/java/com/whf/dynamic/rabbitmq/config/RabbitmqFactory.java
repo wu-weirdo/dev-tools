@@ -42,7 +42,7 @@ public class RabbitmqFactory {
     /**
      * 创建链接工厂
      */
-    public static CachingConnectionFactory createConnectionFactory(String queueName,String host, Integer port, String username, String password) {
+    public static CachingConnectionFactory createConnectionFactory(String queueName, String host, Integer port, String username, String password) {
         //创建链接工厂唯一key
         String key = queueName.concat("_").concat(host).concat("_").concat(String.valueOf(port)).concat("_").concat(username).concat("_").concat(password);
         //判断该链接工厂是否已经创建 不存在则创建并缓存
@@ -114,6 +114,7 @@ public class RabbitmqFactory {
 
     /**
      * 创建广播队列
+     *
      * @param connectionFactory
      * @param className
      * @return

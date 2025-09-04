@@ -7,6 +7,7 @@ import org.springframework.messaging.Message;
 
 /**
  * rocket 事务监听器
+ *
  * @author whf
  * @date 2024/11/19
  */
@@ -23,6 +24,6 @@ public class RocketTransactionListener implements RocketMQLocalTransactionListen
     @Override
     public RocketMQLocalTransactionState checkLocalTransaction(Message msg) {
         //回查本地事务结果
-         return RocketMQLocalTransactionState.COMMIT;
+        return RocketMQLocalTransactionState.COMMIT;
     }
 }

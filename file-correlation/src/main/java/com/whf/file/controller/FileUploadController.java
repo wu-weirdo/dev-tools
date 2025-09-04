@@ -29,18 +29,18 @@ public class FileUploadController {
     FileStorageService fileStorageService;
 
     @PostMapping("/upload")
-    public ResponseEntity<Message> upload(@RequestParam("file")MultipartFile file){
+    public ResponseEntity<Message> upload(@RequestParam("file") MultipartFile file) {
         try {
             fileStorageService.save(file);
-            return ResponseEntity.ok(new Message("Upload file successfully: "+file.getOriginalFilename()));
-        }catch (Exception e){
+            return ResponseEntity.ok(new Message("Upload file successfully: " + file.getOriginalFilename()));
+        } catch (Exception e) {
             return ResponseEntity.badRequest()
-                    .body(new Message("Could not upload the file:"+file.getOriginalFilename()));
+                    .body(new Message("Could not upload the file:" + file.getOriginalFilename()));
         }
     }
 
     @GetMapping("/files")
-    public ResponseEntity<List<UploadFile>> files(){
+    public ResponseEntity<List<UploadFile>> files() {
         List<UploadFile> files = fileStorageService.load()
                 .map(path -> {
                     String fileName = path.getFileName().toString();
@@ -49,17 +49,17 @@ public class FileUploadController {
                                     "getFile",
                                     path.getFileName().toString()
                             ).build().toString();
-                    return new UploadFile(fileName,url);
+                    return new UploadFile(fileName, url);
                 }).collect(Collectors.toList());
         return ResponseEntity.ok(files);
     }
 
     @GetMapping("/files/{filename:.+}")
-    public ResponseEntity<Resource> getFile(@PathVariable("filename")String filename){
+    public ResponseEntity<Resource> getFile(@PathVariable("filename") String filename) {
         Resource file = fileStorageService.load(filename);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment;filename=\""+file.getFilename()+"\"")
+                        "attachment;filename=\"" + file.getFilename() + "\"")
                 .body(file);
     }
 }

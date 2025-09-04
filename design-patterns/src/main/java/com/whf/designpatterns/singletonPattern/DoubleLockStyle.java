@@ -2,6 +2,7 @@ package com.whf.designpatterns.singletonPattern;
 
 /**
  * 单例模式-双重校验锁
+ *
  * @author whf
  * @date 2024/12/17
  */
@@ -16,7 +17,8 @@ public class DoubleLockStyle {
     /**
      * 私有化构造方法(防止外部new新的对象)
      */
-    private DoubleLockStyle(){}
+    private DoubleLockStyle() {
+    }
 
     /**
      * 提供一个静态的公有方法，加入双重检查代码，解决线程安全问题，同时解决懒加载问题

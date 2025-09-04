@@ -12,10 +12,12 @@ public class TreeNode<T> {
      * 数据id
      */
     private Object id;
+
     /**
      * 数据实体
      */
     private T data;
+
     /**
      * 直接子节点
      */
@@ -97,16 +99,16 @@ public class TreeNode<T> {
         datas.removeAll(collect);
         for (T node : collect) {
             TreeNode<T> treeNode = new TreeNode<>();
-            convertTree.setId(treeNode,node,idName);
-            convertTree.setData(treeNode,node);
-            convertTree.setPeer(treeNode,childrenNodeId);
-            convertTree.setParent(treeNode,initParent());
+            convertTree.setId(treeNode, node, idName);
+            convertTree.setData(treeNode, node);
+            convertTree.setPeer(treeNode, childrenNodeId);
+            convertTree.setParent(treeNode, initParent());
             childrenNode.add(treeNode);
         }
         return childrenNode;
     }
 
-    public List<Object> initParent(){
+    public List<Object> initParent() {
         List<Object> copy = new ArrayList<>(parentNode);
         copy.add(id);
         return copy;

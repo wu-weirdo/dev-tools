@@ -2,6 +2,7 @@ package com.whf.datasource.utils;
 
 /**
  * 数据源配置
+ *
  * @author whf
  * @date 2023/12/12
  */
@@ -11,6 +12,7 @@ public class DataSourceContextHolder {
 
     /**
      * 设置当前线程数据源
+     *
      * @param dataSource 数据源名称
      */
     public static void setDataSource(String dataSource) {
@@ -19,6 +21,7 @@ public class DataSourceContextHolder {
 
     /**
      * 获取当前线程数据源
+     *
      * @return 数据源名称
      */
     public static String getDataSource() {

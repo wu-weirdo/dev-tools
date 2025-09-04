@@ -21,7 +21,7 @@ public enum MessageEnum {
     OVER_FILE_MAX_SIZE(1005, "超出文件大小"),
     CREATE_DIR_ERROR(1006, "创建目录失败"),
     UPLOAD_FILE_ERROR(1007, "上传文件失败"),
-   ;
+    ;
 
     MessageEnum(int value, String text) {
         this.code = value;

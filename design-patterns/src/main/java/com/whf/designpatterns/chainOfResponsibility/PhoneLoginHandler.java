@@ -23,6 +23,7 @@ public class PhoneLoginHandler extends LoginHandler<LoginRequest> {
 
     /**
      * 获取单例
+     *
      * @return
      */
     public static PhoneLoginHandler getInstance() {

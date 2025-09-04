@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FullReduceCouponStrategy implements CouponStrategy {
- 
+
     /**
      * 适用的优惠券类型
      *
@@ -20,7 +20,7 @@ public class FullReduceCouponStrategy implements CouponStrategy {
     public CouponTypeEnum applyCouponType() {
         return CouponTypeEnum.FULL_REDUCE;
     }
- 
+
     /**
      * 优惠券策略算法执行入口
      *

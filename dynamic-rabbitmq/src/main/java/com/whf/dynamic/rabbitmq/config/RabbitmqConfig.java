@@ -42,7 +42,7 @@ public class RabbitmqConfig {
                     queueName, mqConfig.getHost(), mqConfig.getPort());
             // 创建连接
             CachingConnectionFactory connectionFactory = RabbitmqFactory.createConnectionFactory(queueName,
-                    mqConfig.getHost(),mqConfig.getPort(), mqConfig.getUsername(), mqConfig.getPassword());
+                    mqConfig.getHost(), mqConfig.getPort(), mqConfig.getUsername(), mqConfig.getPassword());
             connectionFactoryMap.put(queueName, connectionFactory);
             // 绑定队列
             String buildQueueName = RabbitmqFactory.bindBroadCast(connectionFactory, queueName);

@@ -23,6 +23,7 @@ public class EmailLoginHandler extends LoginHandler<LoginRequest> {
 
     /**
      * 获取单例
+     *
      * @return
      */
     public static EmailLoginHandler getInstance() {

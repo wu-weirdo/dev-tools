@@ -34,7 +34,7 @@ public class WebSocketServer {
      * 有客户端连接成功
      */
     @OnOpen
-    public void onOpen(Session session, @PathParam(value = "uid") String uid){
+    public void onOpen(Session session, @PathParam(value = "uid") String uid) {
         sessionPools.add(session);
         onlineNum.incrementAndGet();
         log.info(uid + "加入webSocket！当前人数为" + onlineNum);
@@ -54,7 +54,7 @@ public class WebSocketServer {
      * 发送消息
      */
     public void sendMessage(Session session, String message) throws IOException {
-        if(session != null){
+        if (session != null) {
             synchronized (session) {
                 session.getBasicRemote().sendText(message);
             }
@@ -66,7 +66,7 @@ public class WebSocketServer {
      */
     public void broadCastInfo(String message) throws IOException {
         for (Session session : sessionPools) {
-            if(session.isOpen()){
+            if (session.isOpen()) {
                 sendMessage(session, message);
             }
         }
@@ -76,7 +76,7 @@ public class WebSocketServer {
      * 发生错误
      */
     @OnError
-    public void onError(Session session, Throwable throwable){
+    public void onError(Session session, Throwable throwable) {
         log.error("发生错误");
         throwable.printStackTrace();
     }

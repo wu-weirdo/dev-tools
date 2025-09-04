@@ -18,10 +18,10 @@ public class IThumbnailsServiceImpl implements IThumbnailsService {
      * 若图片横比width大，高比height小，横缩小到width，图片比例不变
      * 若图片横比width大，高比height大，图片按比例缩小，横为width或高为height
      *
-     * @param resource  源文件路径
-     * @param width     宽
-     * @param height    高
-     * @param toFile    生成文件路径
+     * @param resource 源文件路径
+     * @param width    宽
+     * @param height   高
+     * @param toFile   生成文件路径
      */
     @Override
     public String changeSize(MultipartFile resource, int width, int height, String toFile) {
@@ -36,9 +36,9 @@ public class IThumbnailsServiceImpl implements IThumbnailsService {
     /**
      * 指定比例缩放 scale(),参数小于1,缩小;大于1,放大
      *
-     * @param resource   源文件路径
-     * @param scale      指定比例
-     * @param toFile     生成文件路径
+     * @param resource 源文件路径
+     * @param scale    指定比例
+     * @param toFile   生成文件路径
      */
     @Override
     public String changeScale(MultipartFile resource, double scale, String toFile) {
@@ -55,7 +55,7 @@ public class IThumbnailsServiceImpl implements IThumbnailsService {
      *
      * @param resource  源文件路径
      * @param center    水印位置
-     * @param watermark   水印文件路径
+     * @param watermark 水印文件路径
      * @param opacity   水印透明度
      * @param toFile    生成文件路径
      */
@@ -72,9 +72,9 @@ public class IThumbnailsServiceImpl implements IThumbnailsService {
     /**
      * 图片旋转 rotate(度数),顺时针旋转
      *
-     * @param resource  源文件路径
-     * @param rotate    旋转度数
-     * @param toFile    生成文件路径
+     * @param resource 源文件路径
+     * @param rotate   旋转度数
+     * @param toFile   生成文件路径
      */
     @Override
     public String rotate(MultipartFile resource, double rotate, String toFile) {
@@ -89,11 +89,11 @@ public class IThumbnailsServiceImpl implements IThumbnailsService {
     /**
      * 图片裁剪 sourceRegion()有多种构造方法，示例使用的是sourceRegion(裁剪位置,宽,高)
      *
-     * @param resource  源文件路径
-     * @param center    裁剪位置
-     * @param width     裁剪区域宽
-     * @param height    裁剪区域高
-     * @param toFile    生成文件路径
+     * @param resource 源文件路径
+     * @param center   裁剪位置
+     * @param width    裁剪区域宽
+     * @param height   裁剪区域高
+     * @param toFile   生成文件路径
      */
     @Override
     public String region(MultipartFile resource, Positions center, int width, int height, String toFile) {
